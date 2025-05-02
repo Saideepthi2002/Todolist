@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+       body {
+        font-family: Arial, sans-serif;
+        background-color: #f3f4f6;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+      }
+
+      #form {
+        background-color: #ffffff;
+        padding: 30px 40px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        width: 300px;
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      label {
+        display: block;
+        margin-top: 10px;
+        color: #555;
+        font-weight: bold;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      button[type="submit"] {
+        width: 100%;
+        background-color: #4caf50;
+        color: white;
+        padding: 10px;
+        font-size: 16px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #45a049;
+      }
+      button {
+          width: 100%;
+          padding: 10px;
+          font-size: 16px;
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-top: 10px;
+        }
+  
+        #signup {
+          background-color: #2196f3;
+          color: white;
+        }
+  
+        #signup:hover {
+          background-color: #2196f3;
+        }
+
+    </style>
+  </head>
+  <body>
+    <form id="form">
+      <h1>Login</h1>
+      <label for="username">LoginName:</label>
+      <input type="text" id="username" required />
+      <br /><br />
+
+      <label for="password">LoginPassword:</label>
+      <input type="password" id="password" required />
+      <br /><br />
+      <button type="submit">Login</button>
+      <!-- <button type="submit" id="signup">Go To SignUp</button> -->
+      <!-- <button type="button" id="sup">SignUp</button> -->
+    </form>
+    <script>
+      let Loginusername = document.getElementById("username");
+      let Loginpassword = document.getElementById("password");
+      let login = document.getElementById("login");
+      let form = document.getElementById("form");
+      let signup = document.getElementById("signup");
+
+
+      form.addEventListener('submit',function(event){
+            event.preventDefault()
+            let data=JSON.parse(localStorage.getItem('RegisterData'))
+            console.log(data)
+
+            let userExist=false 
+
+            data.forEach(element => {
+                // console.log(element)
+                if(element.username==Loginusername.value && element.password==Loginpassword.value){
+                    userExist=true
+                }  
+            });
+
+            if(userExist==true){
+                alert('Login Successfull!!!')
+                localStorage.setItem(`User`,Loginusername.value)
+                window.location.href='todo.html'
+            }
+            else if(userExist==false){
+                alert('Invalid Username or Password')
+
+            }
+        })
+
+        signup.addEventListener('click',()=>{
+            window.location.href='signup.html'
+        })
+    
+
+    </script>
+  </body>
+</html>

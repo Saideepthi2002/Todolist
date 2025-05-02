@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo List</title>
+    <style>
+      body {
+        font-family: Arial;
+        background: #f9fafb;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding-top: 50px;
+        margin: 0;
+      }
+      h1 {
+        color: #333;
+      }
+      .input-group {
+        display: flex;
+        margin-bottom: 20px;
+      }
+      input {
+        padding: 10px;
+        width: 250px;
+        margin-right: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      #addbtn {
+        background: #4caf50;
+        color: white;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        width: 400px;
+      }
+      li {
+        background: khaki;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+      }
+      li button {
+        margin-left: 10px;
+      }
+      #logout {
+        margin-top: 30px;
+        background: green;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Todo List</h1>
+    <div class="input-group">
+      <input type="text" id="input" placeholder="Enter task..." />
+      <button id="addbtn" onclick="addtask()">Add</button>
+    </div>
+    <ul id="ul"></ul>
+    <button id="logout" onclick="logout()">Logout</button>
+
+    <script>
+      let input = document.getElementById("input");
+      let ul = document.getElementById("ul");
+
+      const currentUser = localStorage.getItem("User");
+      if (!currentUser) {
+        alert("User not logged in!");
+        location.href = "Login.html";
+      }
+
+      const Userid = `${currentUser}_tasks`;
+
+      function loadTasks() {
+        ul.innerHTML = "";
+        const arr_tasks = JSON.parse(localStorage.getItem(Userid)) || [];
+        arr_tasks.forEach(displayTask);
+      }
+
+      function addtask() {
+        const todotask = input.value.trim();
+        if (!todotask) return alert("Enter a task!");
+        const arr_todotasks = JSON.parse(localStorage.getItem(Userid)) || [];
+        arr_todotasks.push(todotask);
+        // set unque user,track task
+        localStorage.setItem(Userid, JSON.stringify(arr_todotasks));
+        input.value = "";
+        loadTasks();
+      }
+      
+      function displayTask(todotask) {
+        const li = document.createElement("li");
+        const span = document.createElement("span");
+        span.textContent = todotask;
+        li.appendChild(span);
+
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "DELETE";
+        delBtn.addEventListener('click',()=>{
+            // prompt('Are u sure,do you want to delte the task',todotask)
+            let prom_option=prompt(`Are you sure? do you want to delete  the task ${todotask}  from todo`,todotask)
+            if(prom_option!==null){
+            let arr_tasks=JSON.parse(localStorage.getItem(Userid))||[]
+            arr_tasks=arr_tasks.filter((task)=>task!==todotask)
+            localStorage.setItem(Userid, JSON.stringify(arr_tasks));
+            loadTasks();
+
+            }
+            
+        })
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "EDIT";
+        editBtn.addEventListener('click',()=>{
+            let editedTask=prompt('Edit the task',todotask)
+            if(editedTask!==null && editedTask.trim()!=''){
+                let arr_tasks=JSON.parse(localStorage.getItem(Userid)) || []
+                arr_tasks=arr_tasks.map((ele)=>(ele===todotask?editedTask.trim():ele))
+                localStorage.setItem(Userid,JSON.stringify(arr_tasks))
+                loadTasks()
+
+            }
+        })
+
+        li.appendChild(delBtn);
+        li.appendChild(editBtn);
+        ul.appendChild(li);
+      }
+
+      function logout() {
+        localStorage.removeItem("User");
+        location.href = "Login.html";
+      }
+      window.onload = loadTasks;
+    </script>
+  </body>
+</html>
